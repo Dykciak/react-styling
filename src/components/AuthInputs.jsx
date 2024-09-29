@@ -1,33 +1,4 @@
 import { useState } from "react";
-import { styled } from "styled-components";
-
-const ControlDiv = styled.div`
-	display: flex;
-	flex-direction: column;
-	gap: 0.5rem;
-	margin-bottom: 1.5rem;
-`;
-
-const Label = styled.label`
-	display: block;
-	margin-bottom: 0.5rem;
-	font-size: 0.75rem;
-	font-weight: 700;
-	letter-spacing: 0.1em;
-	text-transform: uppercase;
-	color: ${({ invalid }) => (invalid ? "#f87171" : "#6b7280")};
-`;
-
-const Input = styled.input`
-	width: 100%;
-	padding: 0.75rem 1rem;
-	line-height: 1.5;
-	background-color: #d1d5db;
-	color: #374151;
-	border: 1px solid transparent;
-	border-radius: 0.25rem;
-	box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-`;
 
 export default function AuthInputs() {
 	const [enteredEmail, setEnteredEmail] = useState("");
@@ -49,42 +20,65 @@ export default function AuthInputs() {
 	const emailNotValid = submitted && !enteredEmail.includes("@");
 	const passwordNotValid = submitted && enteredPassword.trim().length < 6;
 
+	// Oddzielne klasy dla e-maila i hasła
+	let emailLabelClasses =
+		"block mb-2 text-xs font-bold tracking-wide uppercase ";
+	let passwordLabelClasses =
+		"block mb-2 text-xs font-bold tracking-wide uppercase ";
+
+	if (emailNotValid) {
+		emailLabelClasses += "text-red-400"; // Dla niepoprawnego e-maila
+		emailLabelClasses += " ";
+	} else {
+		emailLabelClasses += "text-stone-300"; // Dla poprawnego e-maila
+		emailLabelClasses += " ";
+	}
+
+	if (passwordNotValid) {
+		passwordLabelClasses += "text-red-400"; // Dla niepoprawnego hasła
+		passwordLabelClasses += " ";
+	} else {
+		passwordLabelClasses += "text-stone-300"; // Dla poprawnego hasła
+		passwordLabelClasses += "	";
+	}
+
 	return (
 		<div id="auth-inputs">
-			<ControlDiv>
+			<div className="flex flex-col gap-2 mb-6">
 				<p>
-					<Label invalid={emailNotValid}>
-						{/* className={`label ${emailNotValid ? "invalid" : ""}`} */}
-						Email
-					</Label>
-					<Input
+					<label className={emailLabelClasses}>Email</label>
+					<input
 						type="email"
-						style={{
-							//pierwszy sposob
-							backgroundColor: emailNotValid ? "#fed2d2" : "d1d5db",
-						}}
-						// className={emailNotValid ? 'invalid' : undefined} //drugi sposob
+						className={`w-full p-3 leading-6 bg-gray-300 text-gray-700 rounded-md shadow-sm border-transparent ${
+							emailNotValid ? "bg-red-200" : ""
+						}`}
 						onChange={(event) => handleInputChange("email", event.target.value)}
 					/>
 				</p>
 				<p>
-					<Label className={`label ${passwordNotValid ? "invalid" : ""}`}>
-						Password
-					</Label>
-					<Input
+					<label className={passwordLabelClasses}>Password</label>
+					<input
 						type="password"
-						className={passwordNotValid ? "invalid" : undefined}
+						className={`w-full p-3 leading-6 bg-gray-300 text-gray-700 rounded-md shadow-sm border-transparent ${
+							passwordNotValid ? "bg-red-200" : ""
+						}`}
 						onChange={(event) =>
 							handleInputChange("password", event.target.value)
 						}
 					/>
 				</p>
-			</ControlDiv>
-			<div className="actions">
-				<button type="button" className="text-button">
+			</div>
+			<div className="actions flex justify-between">
+				<button
+					type="button"
+					className="text-sm text-gray-600 hover:text-gray-800"
+				>
 					Create a new account
 				</button>
-				<button className="button" onClick={handleLogin}>
+				<button
+					className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
+					onClick={handleLogin}
+				>
 					Sign In
 				</button>
 			</div>
